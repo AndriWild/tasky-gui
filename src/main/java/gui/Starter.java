@@ -1,9 +1,5 @@
 package gui;
 
-/**
- * Hello world!
- *
- */
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +9,8 @@ public class Starter extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent rootPane = new ApplicationUI();
+    PresentationModel model = new PresentationModel();
+    Parent rootPane = new ApplicationUI(model);
     Scene scene = new Scene(rootPane);
 
     primaryStage.setTitle("Tasky");
