@@ -1,6 +1,5 @@
 package gui;
 
-import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -15,7 +14,7 @@ import javafx.scene.layout.HBox;
 import model.State;
 import model.Task;
 
-public class RightArea extends GridPane {
+public class Details extends GridPane {
 
   private Label[] labels;
   private TextField txtFieldTitle;
@@ -28,7 +27,7 @@ public class RightArea extends GridPane {
   private Button btnSave;
   private Button btnDelete;
 
-  public RightArea() {
+  public Details(ObservableList<Task> taskList) {
     this.setGridLinesVisible(false);
     this.setPadding(new Insets(50));
     this.setVgap(20);
@@ -37,14 +36,6 @@ public class RightArea extends GridPane {
 
     initializeControls();
     layoutControls();
-  }
-
-  public void updateTask(Task task) {
-    txtFieldId.setText(String.valueOf(task.getId()));
-    txtFieldTitle.setText(String.valueOf(task.getTitle()));
-    textAreaDesc.setText(String.valueOf(task.getDescription()));
-    datePicker.setValue(task.getDate());
-    choiceBoxState.setValue(task.getStatus());
   }
 
   private void initializeControls() {
@@ -56,8 +47,13 @@ public class RightArea extends GridPane {
 
     txtFieldId = new TextField();
     txtFieldId.setDisable(true);
+    txtFieldId.textProperty().bind(PresentationModel.getInstance().getId().asString());
+
     txtFieldTitle = new TextField();
+    txtFieldTitle.textProperty().bindBidirectional(PresentationModel.getInstance().getTitle());
     textAreaDesc = new TextArea();
+    textAreaDesc.textProperty().bindBidirectional(PresentationModel.getInstance().getDescription());
+
     datePicker = new DatePicker();
     choiceBoxState = new ChoiceBox<>(FXCollections.observableArrayList(State.values()));
 
@@ -68,33 +64,32 @@ public class RightArea extends GridPane {
     buttonRow.setSpacing(20);
     btnDelete.setOnAction(event -> deleteTask());
     btnSave.setOnAction(event -> saveChanges());
+
   }
 
   private void saveChanges() {
-    if (!txtFieldId.getText().isEmpty()) {
-      int id = Integer.parseInt(txtFieldId.getText());
-      ObservableList<Task> list = ApplicationUI.getRepository();
-      Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
-      if (task.isPresent()) {
-        list.remove(task.get());
-        task.get().setTitle(txtFieldTitle.getText());
-        task.get().setDescription(textAreaDesc.getText());
-        task.get().setStatus(choiceBoxState.getValue());
-        task.get().setDate(datePicker.getValue());
-        list.add(task.get());
-      }
-    }
+    // if (!txtFieldId.getText().isEmpty()) {
+    // int id = Integer.parseInt(txtFieldId.getText());
+    // Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
+    // if (task.isPresent()) {
+    // list.remove(task.get());
+    // task.get().setTitle(txtFieldTitle.getText());
+    // task.get().setDescription(textAreaDesc.getText());
+    // task.get().setStatus(choiceBoxState.getValue());
+    // task.get().setDate(datePicker.getValue());
+    // list.add(task.get());
+    // }
+    // }
   }
 
   private void deleteTask() {
-    if (!txtFieldId.getText().isEmpty()) {
-      int id = Integer.parseInt(txtFieldId.getText());
-      ObservableList<Task> list = ApplicationUI.getRepository();
-      Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
-      if (task.isPresent()) {
-        list.remove(task.get());
-      }
-    }
+    // if (!txtFieldId.getText().isEmpty()) {
+    // int id = Integer.parseInt(txtFieldId.getText());
+    // Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
+    // if (task.isPresent()) {
+    // list.remove(task.get());
+    // }
+    // }
   }
 
   private void layoutControls() {

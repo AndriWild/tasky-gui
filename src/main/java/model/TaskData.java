@@ -59,8 +59,8 @@ public class TaskData {
       return false;
     if (that instanceof TaskData) {
       TaskData data = (TaskData) that;
-      return this.title == data.title && this.description == data.description && this.date == data.date
-          && this.status == data.status;
+      return this.title == data.title && this.description == data.description
+          && this.date == data.date && this.status == data.status;
     } else {
       return false;
     }

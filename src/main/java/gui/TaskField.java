@@ -1,10 +1,8 @@
 package gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 import model.State;
@@ -14,12 +12,14 @@ public class TaskField extends FlowPane {
   private static final int TASKFIELD_HEIGHT = 500;
   private static final int TASKFIELD_WIDTH = Integer.MAX_VALUE;
   private String color;
-  private List<Task> tasks;
   private final State state;
+  private ObservableList<Task> taskList;
 
-  public TaskField(String color, State state) {
+  public TaskField(String color, State state, ObservableList<Task> taskList) {
+    this.taskList = taskList;
     this.color = color;
     this.state = state;
+
     initializeControls();
     layoutControls();
   }
@@ -33,9 +33,8 @@ public class TaskField extends FlowPane {
     this.setVgap(10);
     this.setPadding(new Insets(5));
 
-    tasks = new ArrayList<>();
     ListChangeListener<Task> listener = change -> listChangeOccure(change);
-    ApplicationUI.getRepository().addListener(listener);
+    taskList.addListener(listener);
 
   }
 

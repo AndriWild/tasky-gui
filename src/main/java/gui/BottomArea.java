@@ -1,22 +1,25 @@
 package gui;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import model.State;
+import model.Task;
+import model.TaskData;
 
 public class BottomArea extends HBox {
 
   private HBox buttonRow;
-  private PresentationModel model;
+  private ObservableList<Task> taskList;
 
+  public BottomArea(ObservableList<Task> taskList) {
+    this.taskList = taskList;
 
-  public BottomArea(PresentationModel model) {
-    this.model = model;
     this.setPadding(new Insets(10));
-
     this.minHeight(100);
-    initializeControls();
 
+    initializeControls();
     layoutControls();
   }
 
@@ -31,7 +34,9 @@ public class BottomArea extends HBox {
   }
 
   private void createNewTask() {
-
+    Task task = new Task(new TaskData("", "", State.TODO, null));
+    taskList.add(task);
+    PresentationModel.getInstance().setId(task.getId());
   }
 
   private void layoutControls() {

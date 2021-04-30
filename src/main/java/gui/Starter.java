@@ -9,8 +9,7 @@ public class Starter extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    PresentationModel model = new PresentationModel();
-    Parent rootPane = new ApplicationUI(model);
+    Parent rootPane = new ApplicationUI();
     Scene scene = new Scene(rootPane);
 
     primaryStage.setTitle("Tasky");
