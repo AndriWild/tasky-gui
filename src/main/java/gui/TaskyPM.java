@@ -2,7 +2,6 @@ package gui;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -30,6 +29,7 @@ public class TaskyPM {
   private BooleanProperty sync;
 
   public static TaskyPM getInstance() {
+    System.out.println("TaskyPM.getInstance()");
     return INSTANCE;
   }
 
@@ -49,6 +49,8 @@ public class TaskyPM {
   }
 
   public List<Task> getTaskList() {
+    System.out.println("TaskyPM.getTaskList()");
+    System.out.println(taskList.get());
     return taskList.get();
   }
 
@@ -84,6 +86,7 @@ public class TaskyPM {
   }
 
   public void createTask() {
+    System.out.println("TaskyPM.createTask()");
     int newTaskID = taskList.add(new TaskData("", "", State.TODO, LocalDate.now()));
     this.id.set(newTaskID);
     syncUserInterface();
@@ -101,6 +104,7 @@ public class TaskyPM {
     selectedTask.setDescription(description.get());
     selectedTask.setDate(date.get());
     selectedTask.setStatus(state.get());
+    System.out.println(taskList.get().size());
     syncUserInterface();
   }
 
@@ -109,6 +113,7 @@ public class TaskyPM {
   }
 
   private void syncUserInterface(){
+    System.out.println("TaskyPM.syncUserInterface()");
     this.sync.set(!this.sync.get());
   }
 
