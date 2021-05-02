@@ -2,24 +2,16 @@ package model;
 
 import java.time.LocalDate;
 
-import gui.TaskLabel;
-
 public class Task {
 
   private int id;
   private TaskData data;
-  private TaskLabel label;
-  private static int idCounter = 1;
+  private static int idCounter = 0;
 
   public Task(TaskData data) {
     this.id = idCounter;
     idCounter++;
     this.data = data;
-    this.label = new TaskLabel(data.getTitle(), id);
-  }
-
-  public TaskLabel getLabel() {
-    return this.label;
   }
 
   public int getId() {
@@ -34,7 +26,7 @@ public class Task {
     return data.getDescription();
   }
 
-  public State getStatus() {
+  public State getState() {
     return data.getStatus();
   }
 

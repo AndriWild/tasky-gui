@@ -1,6 +1,11 @@
 package gui;
 
-import javafx.collections.ObservableList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -22,13 +27,29 @@ public class CenterArea extends HBox {
   private TaskField regionDoing;
   private TaskField regionDone;
 
-  private ObservableList<Task> taskList;
+  private BooleanProperty sync;
 
-  public CenterArea(ObservableList<Task> taskList) {
-    this.taskList = taskList;
+  public CenterArea() {
     this.setPadding(new Insets(10));
     initializeControls();
     layoutControls();
+
+    sync = new SimpleBooleanProperty();
+    sync.bind(TaskyPM.getInstance().getSync());
+    sync.addListener((val, oldValue, newValue) -> updateTasks());
+  }
+
+  private void updateTasks() {
+    System.out.println("CenterArea.updateTasks()");
+    Map<State, List<Task>> map = TaskyPM.getInstance()
+      .getTaskList()
+      .stream()
+      .collect(Collectors.groupingBy(Task::getState));
+
+    regionTodo.update(map.get(State.TODO));
+    regionDoing.update(map.get(State.DOING));
+    regionDone.update(map.get(State.DONE));
+
   }
 
   private void layoutControls() {
@@ -36,9 +57,9 @@ public class CenterArea extends HBox {
   }
 
   private void initializeRegions() {
-    regionTodo = new TaskField("2ecc71", State.TODO, taskList);
-    regionDoing = new TaskField("20Ac71", State.DOING, taskList);
-    regionDone = new TaskField("2ecFF1", State.DONE, taskList);
+    regionTodo = new TaskField("2ecc71", State.TODO);
+    regionDoing = new TaskField("20Ac71", State.DOING);
+    regionDone = new TaskField("2ecFF1", State.DONE);
   }
 
   private void initializeLabels() {

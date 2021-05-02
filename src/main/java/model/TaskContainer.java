@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TaskContainer {
 
-  public void add(TaskData data);
+  public int add(TaskData data);
 
   public void delete(int id);
 

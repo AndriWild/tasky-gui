@@ -1,7 +1,6 @@
 package gui;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -12,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import model.State;
-import model.Task;
 
 public class Details extends GridPane {
 
@@ -24,10 +22,8 @@ public class Details extends GridPane {
   private ChoiceBox<State> choiceBoxState;
 
   private HBox buttonRow;
-  private Button btnSave;
-  private Button btnDelete;
 
-  public Details(ObservableList<Task> taskList) {
+  public Details() {
     this.setGridLinesVisible(false);
     this.setPadding(new Insets(50));
     this.setVgap(20);
@@ -44,52 +40,31 @@ public class Details extends GridPane {
     for (ControlNames name : ControlNames.values()) {
       labels[name.index] = new Label(name.name);
     }
-
+    
     txtFieldId = new TextField();
-    txtFieldId.setDisable(true);
-    txtFieldId.textProperty().bind(PresentationModel.getInstance().getId().asString());
-
     txtFieldTitle = new TextField();
-    txtFieldTitle.textProperty().bindBidirectional(PresentationModel.getInstance().getTitle());
     textAreaDesc = new TextArea();
-    textAreaDesc.textProperty().bindBidirectional(PresentationModel.getInstance().getDescription());
-
     datePicker = new DatePicker();
     choiceBoxState = new ChoiceBox<>(FXCollections.observableArrayList(State.values()));
-
-    btnSave = new Button("Save");
-    btnDelete = new Button("Delete");
+    
+    TaskyPM pm = TaskyPM.getInstance();
+    txtFieldId.textProperty().bind(pm.getId().asString());
+    txtFieldTitle.textProperty().bindBidirectional(pm.getTitle());
+    textAreaDesc.textProperty().bindBidirectional(pm.getDescription());
+    choiceBoxState.valueProperty().bindBidirectional(pm.getState());
+    datePicker.valueProperty().bindBidirectional(pm.getDate());
+    
+    
+    txtFieldId.setDisable(true);
+    
+    Button btnSave = new Button("Save");
+    Button btnDelete = new Button("Delete");
     buttonRow = new HBox(btnSave, btnDelete);
     buttonRow.setPadding(new Insets(10, 10, 10, 0));
     buttonRow.setSpacing(20);
-    btnDelete.setOnAction(event -> deleteTask());
-    btnSave.setOnAction(event -> saveChanges());
-
-  }
-
-  private void saveChanges() {
-    // if (!txtFieldId.getText().isEmpty()) {
-    // int id = Integer.parseInt(txtFieldId.getText());
-    // Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
-    // if (task.isPresent()) {
-    // list.remove(task.get());
-    // task.get().setTitle(txtFieldTitle.getText());
-    // task.get().setDescription(textAreaDesc.getText());
-    // task.get().setStatus(choiceBoxState.getValue());
-    // task.get().setDate(datePicker.getValue());
-    // list.add(task.get());
-    // }
-    // }
-  }
-
-  private void deleteTask() {
-    // if (!txtFieldId.getText().isEmpty()) {
-    // int id = Integer.parseInt(txtFieldId.getText());
-    // Optional<Task> task = list.stream().filter(e -> e.getId() == id).findAny();
-    // if (task.isPresent()) {
-    // list.remove(task.get());
-    // }
-    // }
+    
+    btnDelete.setOnAction(event -> TaskyPM.getInstance().deleteTask());
+    btnSave.setOnAction(event -> TaskyPM.getInstance().save());
   }
 
   private void layoutControls() {

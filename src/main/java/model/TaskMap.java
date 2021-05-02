@@ -7,14 +7,17 @@ import java.util.Map;
 
 public class TaskMap implements TaskContainer {
 
-  private int idCounter = 1;
+  private int idCounter = 0;
   private Map<Integer, Task> tasks = new HashMap<>();
 
   @Override
-  public void add(TaskData task) {
-    if (task != null) {
-      tasks.put(idCounter, new Task(task));
+  public int add(TaskData taskData) {
+    if (taskData != null) {
+      Task task = new Task(taskData);
+      tasks.put(idCounter++, task);
+      return task.getId();
     }
+    return -1;
   }
 
   @Override

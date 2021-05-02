@@ -7,11 +7,9 @@ public class TaskLabel extends Label {
   private static final int TASK_HEIGHT = 80;
   private static final int TASK_WIDTH = 80;
   private final int id;
-  private PresentationModel model;
 
   public TaskLabel(String title, int id) {
     super(title);
-    this.model = model;
     this.id = id;
 
     initializeControls();
@@ -27,7 +25,7 @@ public class TaskLabel extends Label {
     this.setPadding(new Insets(10));
     this.setPrefHeight(TASK_HEIGHT);
     this.setPrefWidth(TASK_WIDTH);
-    this.setOnMouseClicked(event -> PresentationModel.getInstance().setId(id));
+    this.setOnMouseClicked(event -> TaskyPM.getInstance().setId(id));
   }
 
   private void layoutControls() {
