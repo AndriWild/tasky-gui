@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -11,14 +11,16 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import model.State;
 import model.Task;
+import presentation.TaskyPM;
 
 public class CenterArea extends HBox {
   private BooleanProperty sync;
-  private Map<State,TaskField> fieldMap;
+  private Map<State,Lane> fieldMap;
 
   public CenterArea() {
     initializeControls();
     layoutControls();
+    updateTasks();
   }
 
   private void updateTasks() {
@@ -38,7 +40,7 @@ public class CenterArea extends HBox {
     fieldMap = new EnumMap<>(State.class);
 
     for (State state  : State.values()) {
-      fieldMap.put(state, new TaskField("cfcfcf", state));
+      fieldMap.put(state, new Lane("cfcfcf", state));
     }
 
     sync = new SimpleBooleanProperty();

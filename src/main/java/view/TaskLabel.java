@@ -1,10 +1,11 @@
-package gui;
+package view;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import model.State;
+import presentation.TaskyPM;
 
 public class TaskLabel extends Label {
   private static final int TASK_HEIGHT = 80;

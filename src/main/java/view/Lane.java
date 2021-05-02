@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import model.State;
 import model.Task;
 
-public class TaskField extends VBox {
+public class Lane extends VBox {
   private static final int TASKFIELD_HEIGHT = 500;
   private static final int TASKFIELD_WIDTH = Integer.MAX_VALUE;
   private FlowPane taskLane;
@@ -19,17 +19,15 @@ public class TaskField extends VBox {
   private State state;
   private List<TaskLabel> labels;
 
-  public TaskField(String color, State state) {
-    this.setStyle("-fx-background-color: #" + color + ";");
+  public Lane(String color, State state) {
     this.state = state;
     labels = new ArrayList<>();
 
     initializeControls();
-    layoutControls();
+    layoutControls(color);
   }
 
   public void update(List<Task> list) {
-    System.out.println("TaskField.update()");
     if (list != null) {
       labels = list.stream()
         .map(task -> new TaskLabel(task.getTitle(), task.getId(), task.getState()))
@@ -47,11 +45,13 @@ public class TaskField extends VBox {
     title = new Label(this.state.toString());
   }
 
-  private void layoutControls() {
+  private void layoutControls(String color) {
+    setStyle("-fx-background-color: #" + color + "; -fx-background-radius: 5, 4;");
     setPrefHeight(TASKFIELD_HEIGHT);
     setPrefWidth(TASKFIELD_WIDTH);
     setMaxHeight(TASKFIELD_HEIGHT);
-    setPadding(new Insets(5));
+    setPadding(new Insets(10));
+    title.setPadding(new Insets(10));
     taskLane.setHgap(10);
     taskLane.setVgap(10);
     getChildren().addAll(title,taskLane);

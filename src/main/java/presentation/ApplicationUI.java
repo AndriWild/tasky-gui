@@ -1,16 +1,18 @@
-package gui;
+package presentation;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
+import view.Bottom;
+import view.CenterArea;
+import view.Details;
 
 public class ApplicationUI extends BorderPane {
 
-  private BottomArea bottomArea;
+  private Bottom bottomArea;
   private CenterArea centerArea;
   private Details details;
 
   public ApplicationUI() {
-
     initializeControls();
     layoutControls();
   }
@@ -23,7 +25,7 @@ public class ApplicationUI extends BorderPane {
   }
 
   private void initializeControls() {
-    bottomArea = new BottomArea();
+    bottomArea = new Bottom();
     details = new Details();
     centerArea = new CenterArea();
   }

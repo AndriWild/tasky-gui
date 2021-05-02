@@ -1,14 +1,15 @@
-package gui;
+package view;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import presentation.TaskyPM;
 
-public class BottomArea extends HBox {
+public class Bottom extends HBox {
 
   private HBox buttonRow;
 
-  public BottomArea() {
+  public Bottom() {
 
     this.setPadding(new Insets(10));
     this.minHeight(100);
@@ -18,7 +19,7 @@ public class BottomArea extends HBox {
   }
 
   private void initializeControls() {
-    Button btnNew = new Button("New");
+    Button btnNew = new Button("New"); // Muss dieser Test auch in die PM Klasse?
     Button btnRefresh = new Button("Refresh");
     buttonRow = new HBox(btnNew, btnRefresh);
     buttonRow.setSpacing(20);

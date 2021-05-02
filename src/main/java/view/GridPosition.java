@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 public enum GridPosition {
   ID(0, "ID"), TITLE(1, "Title"), DESCRIPTION(2, "Desc"), DATE(3, "Date"), STATE(4, "State");

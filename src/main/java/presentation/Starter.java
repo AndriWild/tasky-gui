@@ -1,4 +1,4 @@
-package gui;
+package presentation;
 
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -12,7 +12,7 @@ public class Starter extends Application {
     Parent rootPane = new ApplicationUI();
     Scene scene = new Scene(rootPane);
 
-    primaryStage.setTitle("Tasky");
+    primaryStage.titleProperty().bind(TaskyPM.getInstance().getWindowTitle());
     primaryStage.setScene(scene);
     primaryStage.setHeight(800);
     primaryStage.setWidth(1000);

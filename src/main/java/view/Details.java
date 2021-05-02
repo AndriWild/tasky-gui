@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import model.State;
+import presentation.TaskyPM;
 
 public class Details extends GridPane {
 
@@ -47,16 +48,11 @@ public class Details extends GridPane {
     datePicker = new DatePicker();
     choiceBoxState = new ChoiceBox<>(FXCollections.observableArrayList(State.values()));
     
-    TaskyPM pm = TaskyPM.getInstance();
-    txtFieldId.textProperty().bind(pm.getId().asString());
-    txtFieldTitle.textProperty().bindBidirectional(pm.getTitle());
-    textAreaDesc.textProperty().bindBidirectional(pm.getDescription());
-    choiceBoxState.valueProperty().bindBidirectional(pm.getState());
-    datePicker.valueProperty().bindBidirectional(pm.getDate());
-    
+    initBindings();
+
     txtFieldId.setDisable(true);
     
-    Button btnSave = new Button("Save");
+    Button btnSave = new Button("Save"); // In die PM Klasse?
     Button btnDelete = new Button("Delete");
     buttonRow = new HBox(btnSave, btnDelete);
     buttonRow.setPadding(new Insets(10, 10, 10, 0));
@@ -76,5 +72,14 @@ public class Details extends GridPane {
     add(datePicker, row, GridPosition.DATE.index);
     add(choiceBoxState, row, GridPosition.STATE.index);
     add(buttonRow, 0, 5, 2, 1);
+  }
+
+  private void initBindings(){
+    TaskyPM pm = TaskyPM.getInstance();
+    txtFieldId.textProperty().bind(pm.getId().asString());
+    txtFieldTitle.textProperty().bindBidirectional(pm.getTitle());
+    textAreaDesc.textProperty().bindBidirectional(pm.getDescription());
+    choiceBoxState.valueProperty().bindBidirectional(pm.getState());
+    datePicker.valueProperty().bindBidirectional(pm.getDate());
   }
 }
