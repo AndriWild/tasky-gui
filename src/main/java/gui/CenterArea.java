@@ -27,20 +27,12 @@ public class CenterArea extends HBox {
   private TaskField regionDoing;
   private TaskField regionDone;
 
-  private BooleanProperty sync;
-
   public CenterArea() {
-    this.setPadding(new Insets(10));
     initializeControls();
     layoutControls();
-
-    sync = new SimpleBooleanProperty();
-    sync.bind(TaskyPM.getInstance().getSync());
-    sync.addListener((val, oldValue, newValue) -> updateTasks());
   }
 
   private void updateTasks() {
-    System.out.println("CenterArea.updateTasks()");
     Map<State, List<Task>> map = TaskyPM.getInstance()
       .getTaskList()
       .stream()
@@ -52,23 +44,8 @@ public class CenterArea extends HBox {
 
   }
 
-  private void layoutControls() {
-    this.getChildren().addAll(todoBox, doingBox, doneBox);
-  }
-
-  private void initializeRegions() {
-    regionTodo = new TaskField("2ecc71", State.TODO);
-    regionDoing = new TaskField("20Ac71", State.DOING);
-    regionDone = new TaskField("2ecFF1", State.DONE);
-  }
-
-  private void initializeLabels() {
-    lblTodo = new Label("Todo");
-    lblDoing = new Label("Doing");
-    lblDone = new Label("Done");
-  }
-
   private void initializeControls() {
+    this.setPadding(new Insets(10));
     initializeLabels();
     initializeRegions();
 
@@ -83,5 +60,25 @@ public class CenterArea extends HBox {
     todoBox.setSpacing(10);
     doingBox.setSpacing(10);
     doneBox.setSpacing(10);
+
+    BooleanProperty sync = new SimpleBooleanProperty();
+    sync.bind(TaskyPM.getInstance().getSync());
+    sync.addListener((val, oldValue, newValue) -> updateTasks());
+  }
+
+  private void initializeRegions() {
+    regionTodo = new TaskField("2ecc71");
+    regionDoing = new TaskField("20Ac71");
+    regionDone = new TaskField("2ecFF1");
+  }
+
+  private void initializeLabels() {
+    lblTodo = new Label("Todo");
+    lblDoing = new Label("Doing");
+    lblDone = new Label("Done");
+  }
+
+  private void layoutControls() {
+    this.getChildren().addAll(todoBox, doingBox, doneBox);
   }
 }

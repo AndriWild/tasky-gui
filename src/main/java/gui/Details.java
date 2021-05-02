@@ -35,9 +35,9 @@ public class Details extends GridPane {
   }
 
   private void initializeControls() {
-    labels = new Label[ControlNames.values().length];
+    labels = new Label[GridPosition.values().length];
 
-    for (ControlNames name : ControlNames.values()) {
+    for (GridPosition name : GridPosition.values()) {
       labels[name.index] = new Label(name.name);
     }
     
@@ -54,7 +54,6 @@ public class Details extends GridPane {
     choiceBoxState.valueProperty().bindBidirectional(pm.getState());
     datePicker.valueProperty().bindBidirectional(pm.getDate());
     
-    
     txtFieldId.setDisable(true);
     
     Button btnSave = new Button("Save");
@@ -68,12 +67,14 @@ public class Details extends GridPane {
   }
 
   private void layoutControls() {
-    addColumn(0, labels);
-    add(txtFieldId, 1, 0);
-    add(txtFieldTitle, 1, 1);
-    add(textAreaDesc, 1, 2);
-    add(datePicker, 1, 3);
-    add(choiceBoxState, 1, 4);
+    int row = 0;
+    addColumn(row, labels);
+    row = 1;
+    add(txtFieldId, row, GridPosition.ID.index);
+    add(txtFieldTitle, row, GridPosition.TITLE.index);
+    add(textAreaDesc, row, GridPosition.DESCRIPTION.index);
+    add(datePicker, row, GridPosition.DATE.index);
+    add(choiceBoxState, row, GridPosition.STATE.index);
     add(buttonRow, 0, 5, 2, 1);
   }
 }

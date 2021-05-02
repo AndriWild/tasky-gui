@@ -38,14 +38,6 @@ public class TaskyPM {
     addTestTasks();
     initializeProperties();
   }
-  public List<Task> getTaskList() {
-    System.out.println("TaskyPM.getTaskList()");
-    return taskList.get();
-  }
-
-  public IntegerProperty getId() {
-    return id;
-  }
 
   public void setId(int id) {
     Task task = taskList.get(id);
@@ -56,26 +48,21 @@ public class TaskyPM {
     this.state.set(task.getState());
   }
 
-  /**
-   * @return the date
-   */
+  public List<Task> getTaskList() {
+    return taskList.get();
+  }
+
+  public IntegerProperty getId() {
+    return id;
+  }
+
   public ObjectProperty<LocalDate> getDate() {
     return date;
   }
 
-  /**
-   * @param date the date to set
-   */
-  public void setDate(ObjectProperty<LocalDate> date) {
-    this.date = date;
-  }
 
   public ObjectProperty<State> getState() {
     return state;
-  }
-
-  public void setState(ObjectProperty<State> state) {
-    this.state = state;
   }
 
   public StringProperty getTitle() {
@@ -86,57 +73,25 @@ public class TaskyPM {
     this.title = title;
   }
 
-  public void setTitleValue(String title) {
-    this.title.set(title);
-  }
 
   public StringProperty getDescription() {
     return description;
   }
 
-  public void setDescription(StringProperty description) {
-    this.description = description;
-  }
 
   public BooleanProperty getSync() {
     return sync;
   }
 
-  public void setSyncValue(boolean b) {
-    if (this.sync.get()) {
-      this.sync.set(false);
-
-    } else {
-      this.sync.set(true);
-
-    }
-  }
-
-  private void addTestTasks() {
-    taskList.add(new TaskData("A1", "B", State.TODO, LocalDate.parse("2001-08-21")));
-    taskList.add(new TaskData("B2", "B", State.DOING, LocalDate.parse("2001-08-22")));
-    taskList.add(new TaskData("C3", "B", State.DONE, LocalDate.parse("2001-08-23")));
-  }
-
-  public List<Task> getTaskList(State state) {
-    return taskList.get().stream().filter(task -> task.getState() == state).collect(Collectors.toList());
-  }
-
   public void createTask() {
-    System.out.println("TaskyPM.createTask(): Begin");
     int newTaskID = taskList.add(new TaskData("", "", State.TODO, LocalDate.now()));
     this.id.set(newTaskID);
-    this.sync.set(!this.sync.get());
-    System.out.println("TaskyPM.createTask(): End");
+    syncUserInterface();
   }
 
   public void deleteTask() {
     taskList.delete(id.get());
     syncUserInterface();
-  }
-
-  public void refresh() {
-    this.sync.set(!this.sync.get());
   }
 
   public void save() {
@@ -147,7 +102,10 @@ public class TaskyPM {
     selectedTask.setDate(date.get());
     selectedTask.setStatus(state.get());
     syncUserInterface();
-    System.out.println("TaskyPM.save()");
+  }
+
+  public void refresh() {
+    syncUserInterface();
   }
 
   private void syncUserInterface(){
@@ -161,9 +119,12 @@ public class TaskyPM {
     state = new SimpleObjectProperty<>();
     date = new SimpleObjectProperty<>();
     sync = new SimpleBooleanProperty(true);
+  }
 
-    id.addListener(change -> System.out.println("ID Change: " + id.getValue()));
-    sync.addListener(change -> System.out.println("Sync has changed: " + sync.get()));
+  private void addTestTasks() {
+    taskList.add(new TaskData("A1", "B", State.TODO, LocalDate.parse("2001-08-21")));
+    taskList.add(new TaskData("B2", "B", State.DOING, LocalDate.parse("2001-08-22")));
+    taskList.add(new TaskData("C3", "B", State.DONE, LocalDate.parse("2001-08-23")));
   }
 
 }

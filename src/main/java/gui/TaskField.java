@@ -6,18 +6,15 @@ import java.util.stream.Collectors;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
-import model.State;
 import model.Task;
 
 public class TaskField extends FlowPane {
   private static final int TASKFIELD_HEIGHT = 500;
   private static final int TASKFIELD_WIDTH = Integer.MAX_VALUE;
   private List<TaskLabel> labels;
-  private final State state;
 
-  public TaskField(String color, State state) {
+  public TaskField(String color) {
     this.setStyle("-fx-background-color: #" + color + ";");
-    this.state = state;
     labels = new ArrayList<>();
 
     initializeControls();
