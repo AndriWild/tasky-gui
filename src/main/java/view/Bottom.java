@@ -31,5 +31,4 @@ public class Bottom extends HBox {
   private void layoutControls() {
     this.getChildren().add(buttonRow);
   }
-
 }

@@ -1,53 +1,45 @@
 package view;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import model.State;
+import javafx.scene.layout.BorderPane;
 import presentation.TaskyPM;
 
-public class TaskLabel extends Label {
+public class TaskLabel extends BorderPane {
   private static final int TASK_HEIGHT = 80;
   private static final int TASK_WIDTH = 80;
-  private final int id;
-  private IntegerProperty selectedId;
-  private State state;
 
-  public TaskLabel(String title, int id, State state) {
-    super(title);
+  private int id;
+  private String title;
+  private Label titleLabel;
+  private Label idLabel;
+
+  public TaskLabel(String title, int id, String color, double opacity) {
+    this.title = title;
     this.id = id;
-    this.state = state;
-
-    initializeControls();
+    initializeControls(color, opacity);
     layoutControls();
   }
 
-  public void updateTitle(String title) {
-    this.setText(title);
+  public int getTaskId(){
+    return id;
   }
 
-  private void initializeControls() {
-    setOpacity(0.8);
-    // setStyle("-fx-border-color: white;");
-    setStyle("-fx-background-color: " + state.color() + "; -fx-background-radius: 5, 4;");
-    setPadding(new Insets(10));
-    setPrefHeight(TASK_HEIGHT);
-    setPrefWidth(TASK_WIDTH);
-    setOnMouseClicked(event -> TaskyPM.getInstance().setId(id));
-    selectedId = new SimpleIntegerProperty();
-    selectedId.bind(TaskyPM.getInstance().getId());
+  private void initializeControls(String color, double opacity) {
+    setStyle("-fx-background-color: " + color + "; -fx-background-radius: 5, 4;");
+    setOpacity(opacity);
 
-    selectedId.addListener((val,oldVal,newVal) -> {
-      if(newVal.intValue() == id){
-        setOpacity(1.0);
-      } else {
-        setOpacity(0.6);
-      }
-    });
+    titleLabel = new Label(title);
+    idLabel = new Label(String.valueOf(id));
+    setOnMouseClicked(event -> TaskyPM.getInstance().setId(id));
   }
 
   private void layoutControls() {
+    setPadding(new Insets(10));
+    setPrefHeight(TASK_HEIGHT);
+    setPrefWidth(TASK_WIDTH);
+    setTop(idLabel);
+    setBottom(titleLabel);
   }
 
 }

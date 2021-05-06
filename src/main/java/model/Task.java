@@ -1,8 +1,9 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 
-public class Task {
+public class Task implements Comparable<Task>{
 
   private int id;
   private TaskData data;
@@ -78,6 +79,12 @@ public class Task {
     }
     return "[ID:" + this.id + "]" + "\tTitle: " + data.getTitle() + "\tDescription: " + data.getDescription()
         + "\tStatus: " + data.getStatus().toString().toLowerCase() + "\tFällig am: " + dateTimeString;
+  }
+
+
+  @Override
+  public int compareTo(Task o) {
+    return Integer.compare(this.id, o.id);
   }
 
 }

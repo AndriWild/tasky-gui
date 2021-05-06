@@ -2,7 +2,7 @@ package presentation;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Optional;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -26,8 +26,9 @@ public class TaskyPM {
   private StringProperty description;
   private ObjectProperty<State> state;
   private ObjectProperty<LocalDate> date;
-  private BooleanProperty sync;
   private StringProperty windowTitle;
+  private BooleanProperty btnSaveDisable;
+  private BooleanProperty refresh;
 
   public static TaskyPM getInstance() {
     return INSTANCE;
@@ -39,17 +40,24 @@ public class TaskyPM {
     initializeProperties();
   }
 
-  public void setId(int id) {
-    Task task = taskList.get(id);
-    this.id.set(id);
-    this.title.set(task.getTitle());
-    this.description.set(task.getDescription());
-    this.date.set(task.getDate());
-    this.state.set(task.getState());
+  public void setId(int newId) {
+    Optional<Task> selectedTask = taskList.get()
+        .stream()
+        .filter(task -> task.getId() == newId)
+        .findAny();
+
+    if( selectedTask.isPresent() ){
+      Task task = selectedTask.get();
+      id.set(newId);
+      title.set(task.getTitle());
+      description.set(task.getDescription());
+      date.set(task.getDate());
+      state.set(task.getState());
+      System.out.println("TaskyPM.setId():" + this.id.get());
+      }
   }
 
   public List<Task> getTaskList() {
-    System.out.println(taskList.get());
     return taskList.get();
   }
 
@@ -61,7 +69,6 @@ public class TaskyPM {
     return date;
   }
 
-
   public ObjectProperty<State> getState() {
     return state;
   }
@@ -70,51 +77,44 @@ public class TaskyPM {
     return title;
   }
 
-  public void setTitle(StringProperty title) {
-    this.title = title;
-  }
-
-
   public StringProperty getDescription() {
     return description;
-  }
-
-
-  public BooleanProperty getSync() {
-    return sync;
   }
 
   public StringProperty getWindowTitle() {
     return windowTitle;
   }
 
+  public BooleanProperty getBtnSaveEnable(){
+    return btnSaveDisable;
+  }
+
+  public BooleanProperty getRefresh() {
+    return refresh;
+  }
+
   public void createTask() {
-    int newTaskID = taskList.add(new TaskData("", "", State.TODO, null));
-    this.id.set(newTaskID);
-    syncUserInterface();
+    int taskId = taskList.add(new TaskData("", "", State.TODO, null));
+    setId(taskId);
+    btnSaveDisable.set(false);
+    refresh();
   }
 
   public void deleteTask() {
     taskList.delete(id.get());
-    syncUserInterface();
+    if(taskList.get().isEmpty()){
+      btnSaveDisable.set(true);
+    } 
+    refresh();
   }
 
   public void save() {
-    int selectedId = this.id.get();
-    Task selectedTask = taskList.get(selectedId);
+    Task selectedTask = taskList.get(id.get());
     selectedTask.setTitle(title.get());
     selectedTask.setDescription(description.get());
     selectedTask.setDate(date.get());
     selectedTask.setStatus(state.get());
-    syncUserInterface();
-  }
-
-  public void refresh() {
-    syncUserInterface();
-  }
-
-  private void syncUserInterface(){
-    this.sync.set(!this.sync.get());
+    refresh();
   }
 
   private void initializeProperties() {
@@ -123,14 +123,20 @@ public class TaskyPM {
     description = new SimpleStringProperty();
     state = new SimpleObjectProperty<>();
     date = new SimpleObjectProperty<>();
-    sync = new SimpleBooleanProperty(true);
     windowTitle = new SimpleStringProperty("Tasky");
+    btnSaveDisable = new SimpleBooleanProperty();
+    refresh = new SimpleBooleanProperty();
+  }
+
+  public void refresh(){
+    refresh.set(!refresh.get());
   }
 
   private void addTestTasks() {
-    taskList.add(new TaskData("A1", "B", State.TODO, LocalDate.parse("2001-08-21")));
+    taskList.add(new TaskData("A1", "A", State.TODO, LocalDate.parse("2001-08-21")));
     taskList.add(new TaskData("B2", "B", State.DOING, LocalDate.parse("2001-08-22")));
-    taskList.add(new TaskData("C3", "B", State.DONE, LocalDate.parse("2001-08-23")));
+    taskList.add(new TaskData("C3", "C", State.DONE, LocalDate.parse("2001-08-23")));
+    taskList.add(new TaskData("D3", "D", State.REVIEW, LocalDate.parse("2001-08-24")));
   }
 
 }

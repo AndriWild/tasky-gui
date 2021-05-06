@@ -21,6 +21,8 @@ public class Details extends GridPane {
   private TextArea textAreaDesc;
   private DatePicker datePicker;
   private ChoiceBox<State> choiceBoxState;
+  private Button btnSave;
+  private Button btnDelete;
 
   private HBox buttonRow;
 
@@ -48,18 +50,20 @@ public class Details extends GridPane {
     datePicker = new DatePicker();
     choiceBoxState = new ChoiceBox<>(FXCollections.observableArrayList(State.values()));
     
-    initBindings();
 
     txtFieldId.setDisable(true);
     
-    Button btnSave = new Button("Save"); // In die PM Klasse?
-    Button btnDelete = new Button("Delete");
+    btnSave = new Button("Save"); // In die PM Klasse?
+    btnDelete = new Button("Delete");
     buttonRow = new HBox(btnSave, btnDelete);
     buttonRow.setPadding(new Insets(10, 10, 10, 0));
     buttonRow.setSpacing(20);
     
-    btnDelete.setOnAction(event -> TaskyPM.getInstance().deleteTask());
-    btnSave.setOnAction(event -> TaskyPM.getInstance().save());
+    TaskyPM pm = TaskyPM.getInstance();
+    btnDelete.setOnAction(event -> pm.deleteTask());
+    btnSave.setOnAction(event -> pm.save());
+
+    initBindings();
   }
 
   private void layoutControls() {
@@ -81,5 +85,8 @@ public class Details extends GridPane {
     textAreaDesc.textProperty().bindBidirectional(pm.getDescription());
     choiceBoxState.valueProperty().bindBidirectional(pm.getState());
     datePicker.valueProperty().bindBidirectional(pm.getDate());
+
+    btnSave.disableProperty().bind( pm.getBtnSaveEnable());
+    btnDelete.disableProperty().bind( pm.getBtnSaveEnable());
   }
 }

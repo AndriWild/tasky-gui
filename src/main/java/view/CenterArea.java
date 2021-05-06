@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -14,7 +13,7 @@ import model.Task;
 import presentation.TaskyPM;
 
 public class CenterArea extends HBox {
-  private BooleanProperty sync;
+  private BooleanProperty refresh;
   private Map<State,Lane> fieldMap;
 
   public CenterArea() {
@@ -40,12 +39,12 @@ public class CenterArea extends HBox {
     fieldMap = new EnumMap<>(State.class);
 
     for (State state  : State.values()) {
-      fieldMap.put(state, new Lane("cfcfcf", state));
+      fieldMap.put(state, new Lane(state.color(), state));
     }
 
-    sync = new SimpleBooleanProperty();
-    sync.bind(TaskyPM.getInstance().getSync());
-    sync.addListener((val, oldValue, newValue) -> updateTasks());
+    refresh = new SimpleBooleanProperty();
+    refresh.bind(TaskyPM.getInstance().getRefresh());
+    refresh.addListener((val,val1,val2)-> updateTasks());
   }
 
   private void layoutControls() {
