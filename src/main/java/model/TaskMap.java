@@ -11,9 +11,9 @@ public class TaskMap implements TaskContainer {
   private Map<Integer, Task> tasks = new HashMap<>();
 
   @Override
-  public int add(TaskData taskData) {
+  public int add(int id, TaskData taskData) {
     if (taskData != null) {
-      Task task = new Task(taskData);
+      Task task = new Task(id, taskData);
       tasks.put(idCounter++, task);
       return task.getId();
     }
@@ -51,6 +51,17 @@ public class TaskMap implements TaskContainer {
   @Override
   public List<Task> get() {
     return new ArrayList<>(tasks.values());
+  }
+
+  @Override
+  public void addAll(List<Task> list) {
+    list.stream().forEach(task -> {
+      if(!tasks.containsKey(task.getId())){
+        tasks.put(task.getId(), task);
+      } else {
+        throw new IllegalArgumentException();
+      }
+    });
   }
 
 }

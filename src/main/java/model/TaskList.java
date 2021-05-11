@@ -9,8 +9,8 @@ public class TaskList implements TaskContainer {
   private List<Task> tasks = new ArrayList<>();
 
   @Override
-  public int add(TaskData taskData) {
-    Task task = new Task(taskData);
+  public int add(int id, TaskData taskData) {
+    Task task = new Task(id, taskData);
     tasks.add(task);
     return task.getId();
   }
@@ -48,6 +48,17 @@ public class TaskList implements TaskContainer {
   @Override
   public List<Task> get() {
     return Collections.unmodifiableList(tasks);
+  }
+
+  @Override
+  public void addAll(List<Task> list) {
+    list.stream().forEach(task -> {
+      if(!tasks.contains(task)){
+        tasks.add(task);
+      } else {
+        throw new IllegalArgumentException();
+      }
+    });
   }
 
 }

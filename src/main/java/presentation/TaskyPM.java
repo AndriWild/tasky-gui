@@ -1,8 +1,10 @@
 package presentation;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import io.FileRepository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -29,6 +31,9 @@ public class TaskyPM {
   private StringProperty windowTitle;
   private BooleanProperty btnSaveDisable;
   private BooleanProperty refresh;
+  private FileRepository fr;
+
+  private int maxId = 0;
 
   public static TaskyPM getInstance() {
     return INSTANCE;
@@ -36,12 +41,16 @@ public class TaskyPM {
 
   private TaskyPM() {
     taskList = new TaskList();
-    //addTestTasks();
+    // addTestTasks();
     initializeProperties();
+    loadTaskFromFile();
+    setMaxId();
   }
 
+
+
   public void createTask() {
-    int taskId = taskList.add(new TaskData("", "", State.TODO, null));
+    int taskId = taskList.add(++maxId ,new TaskData("", "", State.TODO, null));
     setPropertiesById(taskId);
     if( btnSaveDisable.get() ) btnSaveDisable.set(false);
     refresh();
@@ -72,6 +81,7 @@ public class TaskyPM {
   public void save() {
     Task selectedTask = taskList.get(id.get());
     updateProperties(selectedTask);
+    fr.save(taskList.get());
   }
 
   public void refresh() {
@@ -112,6 +122,18 @@ public class TaskyPM {
 
   public BooleanProperty getRefresh() {
     return refresh;
+  }
+
+  private void setMaxId() {
+    Optional<Task> maxIdTask = taskList.get().stream().max(Comparator.comparingInt(Task::getId));
+    if(maxIdTask.isPresent()){
+      maxId = maxIdTask.get().getId();
+    }
+  }
+
+  private void loadTaskFromFile(){
+    List<Task> list = fr.load();
+    taskList.addAll(list);
   }
 
   private void clearAllProperties() {
@@ -161,13 +183,14 @@ public class TaskyPM {
     windowTitle = new SimpleStringProperty("Tasky");
     btnSaveDisable = new SimpleBooleanProperty();
     refresh = new SimpleBooleanProperty();
+    fr = new FileRepository();
   }
 
-  private void addTestTasks() {
-    taskList.add(new TaskData("A1", "A", State.TODO, LocalDate.parse("2001-08-21")));
-    taskList.add(new TaskData("B2", "B", State.DOING, LocalDate.parse("2001-08-22")));
-    taskList.add(new TaskData("C3", "C", State.DONE, LocalDate.parse("2001-08-23")));
-    taskList.add(new TaskData("D3", "D", State.REVIEW, LocalDate.parse("2001-08-24")));
-  }
+  // private void addTestTasks() {
+  //   taskList.add(new TaskData("A1", "A", State.TODO, LocalDate.parse("2001-08-21")));
+  //   taskList.add(new TaskData("B2", "B", State.DOING, LocalDate.parse("2001-08-22")));
+  //   taskList.add(new TaskData("C3", "C", State.DONE, LocalDate.parse("2001-08-23")));
+  //   taskList.add(new TaskData("D3", "D", State.REVIEW, LocalDate.parse("2001-08-24")));
+  // }
 
 }

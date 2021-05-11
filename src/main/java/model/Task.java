@@ -6,11 +6,9 @@ public class Task implements Comparable<Task>{
 
   private int id;
   private TaskData data;
-  private static int idCounter = 0;
 
-  public Task(TaskData data) {
-    this.id = idCounter;
-    idCounter++;
+  public Task(int id, TaskData data) {
+    this.id = id;
     this.data = data;
   }
 
