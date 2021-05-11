@@ -31,7 +31,7 @@ public class TaskLabel extends BorderPane {
 
     titleLabel = new Label(title);
     idLabel = new Label(String.valueOf(id));
-    setOnMouseClicked(event -> TaskyPM.getInstance().setId(id));
+    setOnMouseClicked(event -> TaskyPM.getInstance().setPropertiesById(id));
   }
 
   private void layoutControls() {

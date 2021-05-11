@@ -15,8 +15,12 @@ import model.Task;
 import presentation.TaskyPM;
 
 public class Lane extends VBox {
+  private static final double INACTIVE_OPACITY = 0.8;
+  private static final double ACTIVE_OPACITY = 1.0;
+  private static final double DEFAULT_OPACITY = 0.7;
   private static final int TASKFIELD_HEIGHT = 500;
   private static final int TASKFIELD_WIDTH = Integer.MAX_VALUE;
+
   private IntegerProperty selectedId;
   private List<TaskLabel> labels;
   private FlowPane taskLane;
@@ -37,7 +41,7 @@ public class Lane extends VBox {
     if (list != null) {
       labels = list.stream()
         .sorted()
-        .map(task -> new TaskLabel(task.getTitle(), task.getId(), color, 1.0 ))
+        .map(task -> new TaskLabel(task.getTitle(), task.getId(), color, DEFAULT_OPACITY ))
         .collect(Collectors.toList());
     } else {
       labels.clear();
@@ -46,13 +50,17 @@ public class Lane extends VBox {
   }
 
   private void updateTaskLabels() {
-    labels.stream().forEach(lbl -> lbl.setOpacity(0.7));
-    Optional<TaskLabel> label = labels.stream().filter(lbl -> lbl.getTaskId() == selectedId.intValue()).findFirst();
-    if(label.isPresent()){
-      label.get().setOpacity(1.0);
-      this.setOpacity(1.0);
+    labels.stream().forEach(lbl -> lbl.setOpacity(DEFAULT_OPACITY));
+    Optional<TaskLabel> label = 
+          labels.stream()
+                .filter(lbl -> lbl.getTaskId() == selectedId.intValue())
+                .findFirst();
+                
+    if(label.isPresent()) {
+      label.get().setOpacity(ACTIVE_OPACITY);
+      setOpacity(ACTIVE_OPACITY);
     } else {
-      this.setOpacity(0.8);
+      setOpacity(INACTIVE_OPACITY);
     }
     taskLane.getChildren().clear();
     taskLane.getChildren().addAll(labels);
@@ -64,7 +72,7 @@ public class Lane extends VBox {
     title = new Label(this.state.toString());
     selectedId = new SimpleIntegerProperty();
     selectedId.bind(TaskyPM.getInstance().getId());
-    selectedId.addListener((val,val1,val2) -> updateTaskLabels());
+    selectedId.addListener(change  -> updateTaskLabels());
   }
 
   private void layoutControls() {

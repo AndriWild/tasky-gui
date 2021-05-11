@@ -1,7 +1,6 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 
 public class Task implements Comparable<Task>{
 

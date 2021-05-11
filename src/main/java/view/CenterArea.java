@@ -14,7 +14,7 @@ import presentation.TaskyPM;
 
 public class CenterArea extends HBox {
   private BooleanProperty refresh;
-  private Map<State,Lane> fieldMap;
+  private Map<State,Lane> laneMap;
 
   public CenterArea() {
     initializeControls();
@@ -23,23 +23,22 @@ public class CenterArea extends HBox {
   }
 
   private void updateTasks() {
-    System.out.println("CenterArea.updateTasks()");
     Map<State, List<Task>> map = TaskyPM.getInstance()
       .getTaskList()
       .stream()
       .collect(Collectors.groupingBy(Task::getState));
 
     for (State state : State.values()) {
-      fieldMap.get(state).update(map.get(state));
+      laneMap.get(state).update(map.get(state));
     }
   }
 
   private void initializeControls() {
     setPadding(new Insets(10));
-    fieldMap = new EnumMap<>(State.class);
+    laneMap = new EnumMap<>(State.class);
 
     for (State state  : State.values()) {
-      fieldMap.put(state, new Lane(state.color(), state));
+      laneMap.put(state, new Lane(state.color(), state));
     }
 
     refresh = new SimpleBooleanProperty();
@@ -48,7 +47,7 @@ public class CenterArea extends HBox {
   }
 
   private void layoutControls() {
-    getChildren().addAll(fieldMap.values());
+    getChildren().addAll(laneMap.values());
     getChildren().stream().forEach(e -> setMargin(e, new Insets(10)));
   }
 }

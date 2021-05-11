@@ -1,7 +1,7 @@
 package model;
 
 public enum State {
-  TODO("#00ffff"), DOING("#7fffd4"), DONE("#f0ffff"), REVIEW("#f5f5dc");
+  TODO("#00ffff"), DOING("#7fffd4"), DONE("#f0ffff"), REVIEW("#f5f5dc");//, ARCHIVE("#d8bfd8");
 
   private String color;
 

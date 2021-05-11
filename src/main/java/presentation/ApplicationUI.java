@@ -26,8 +26,7 @@ public class ApplicationUI extends BorderPane {
 
   private void initializeControls() {
     bottomArea = new Bottom();
-    details = new Details();
     centerArea = new CenterArea();
+    details = new Details();
   }
-
 }

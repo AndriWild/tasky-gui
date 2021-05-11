@@ -49,7 +49,6 @@ public class Details extends GridPane {
     textAreaDesc = new TextArea();
     datePicker = new DatePicker();
     choiceBoxState = new ChoiceBox<>(FXCollections.observableArrayList(State.values()));
-    
 
     txtFieldId.setDisable(true);
     

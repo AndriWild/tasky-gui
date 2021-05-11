@@ -36,25 +36,46 @@ public class TaskyPM {
 
   private TaskyPM() {
     taskList = new TaskList();
-    addTestTasks();
+    //addTestTasks();
     initializeProperties();
   }
 
-  public void setId(int newId) {
-    Optional<Task> selectedTask = taskList.get()
+  public void createTask() {
+    int taskId = taskList.add(new TaskData("", "", State.TODO, null));
+    setPropertiesById(taskId);
+    if( btnSaveDisable.get() ) btnSaveDisable.set(false);
+    refresh();
+  }
+
+  public void deleteTask() {
+    taskList.delete(id.get());
+    if (taskList.get().isEmpty()) btnSaveDisable.set(true);
+    
+    int taskId = getIdOfFirstTask();
+    setPropertiesById(taskId);
+    refresh();
+  }
+
+  public void setPropertiesById(int newId) {
+    Task selectedTask = taskList.get()
         .stream()
         .filter(task -> task.getId() == newId)
-        .findAny();
+        .findAny().orElse(null);
 
-    if( selectedTask.isPresent() ){
-      Task task = selectedTask.get();
-      id.set(newId);
-      title.set(task.getTitle());
-      description.set(task.getDescription());
-      date.set(task.getDate());
-      state.set(task.getState());
-      System.out.println("TaskyPM.setId():" + this.id.get());
-      }
+    if( selectedTask != null ) {
+      setAllProperties(selectedTask);
+    } else {
+      clearAllProperties();
+    }
+  }
+
+  public void save() {
+    Task selectedTask = taskList.get(id.get());
+    updateProperties(selectedTask);
+  }
+
+  public void refresh() {
+    refresh.set(!refresh.get());
   }
 
   public List<Task> getTaskList() {
@@ -93,23 +114,37 @@ public class TaskyPM {
     return refresh;
   }
 
-  public void createTask() {
-    int taskId = taskList.add(new TaskData("", "", State.TODO, null));
-    setId(taskId);
-    btnSaveDisable.set(false);
-    refresh();
+  private void clearAllProperties() {
+    id.set(-1);
+    title.set("");
+    description.set("");
+    date.set(null);
+    state.set(null);
   }
 
-  public void deleteTask() {
-    taskList.delete(id.get());
-    if(taskList.get().isEmpty()){
-      btnSaveDisable.set(true);
-    } 
-    refresh();
+  private void setAllProperties(Task task) {
+    id.set(task.getId());
+    title.set(task.getTitle());
+    description.set(task.getDescription());
+    date.set(task.getDate());
+    state.set(task.getState());
   }
 
-  public void save() {
-    Task selectedTask = taskList.get(id.get());
+  private int getIdOfFirstTask() {
+    Optional<Task> selectedTask = 
+      taskList.get().stream()
+                    .sorted()
+                    .filter(task -> task.getId() != -1)
+                    .findFirst();
+
+    if (selectedTask.isPresent()) {
+      return selectedTask.get().getId();
+    } else {
+      return -1;
+    }
+  }
+
+  private void updateProperties(Task selectedTask) {
     selectedTask.setTitle(title.get());
     selectedTask.setDescription(description.get());
     selectedTask.setDate(date.get());
@@ -126,10 +161,6 @@ public class TaskyPM {
     windowTitle = new SimpleStringProperty("Tasky");
     btnSaveDisable = new SimpleBooleanProperty();
     refresh = new SimpleBooleanProperty();
-  }
-
-  public void refresh(){
-    refresh.set(!refresh.get());
   }
 
   private void addTestTasks() {

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TaskList implements TaskContainer {
@@ -46,7 +47,7 @@ public class TaskList implements TaskContainer {
 
   @Override
   public List<Task> get() {
-    return tasks;
+    return Collections.unmodifiableList(tasks);
   }
 
 }
