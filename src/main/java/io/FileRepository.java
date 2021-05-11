@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,48 +23,98 @@ public final class FileRepository {
 
   private static final String DIR = "ressources";
   private static final String FILE = "tasks";
+  private static final String ENC_FILE = "enc_tasks";
 
   private Path toDir;
   private Path toFile;
+  private Path toEncFile;
 
 
   public FileRepository(){
     toDir = Paths.get(DIR);
     toFile = toDir.resolve(FILE);
+    toEncFile = toDir.resolve(ENC_FILE);
   }
 
-  public void save(List<Task> tasks) {
+  // public void save(List<Task> tasks) {
+
+  //   createDirAndFile();
+  //   System.out.println("save tasks to file ...");
+  //   try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toFile.toFile()))) {
+  //     for (Task task : tasks) {
+  //       os.write((task.getId() + ",").getBytes());
+  //       os.write((task.getTitle() + ",").getBytes());
+  //       os.write((task.getDescription() + ",").getBytes());
+  //       os.write((task.getState().toString() + ",").getBytes());
+  //       os.write((task.getDate().toString() + "\n").getBytes());
+  //     }
+  //   } catch (final Exception e) {
+  //     e.printStackTrace();
+  //   }
+  //   System.out.println("done!");
+  // }
+  public void save2(List<Task> tasks) {
 
     createDirAndFile();
+    StringBuilder builder = new StringBuilder();
     System.out.println("save tasks to file ...");
-    try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toFile.toFile()))) {
+    try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toEncFile.toFile()))) {
+      
       for (Task task : tasks) {
-        os.write((task.getId() + ",").getBytes());
-        os.write((task.getTitle() + ",").getBytes());
-        os.write((task.getDescription() + ",").getBytes());
-        os.write((task.getState().toString() + ",").getBytes());
-        os.write((task.getDate().toString() + "\n").getBytes());
+        builder.append(task.getId() + ",");
+        builder.append(task.getTitle() + ",");
+        builder.append(task.getDescription() + ",");
+        builder.append(task.getState().toString() + ",");
+        builder.append(task.getDate().toString() + "\n");
+        // byte[] decoded = Base64.getDecoder().decode(encoded);
+        // System.out.println(new String(decoded));
       }
+      String encoded = Base64.getEncoder().encodeToString(builder.toString().getBytes());
+      os.write(encoded.getBytes());
     } catch (final Exception e) {
       e.printStackTrace();
     }
     System.out.println("done!");
+    load2();
   }
 
   
-  public List<Task> load() {
-    System.out.println("loading task from file ...");
+  // public List<Task> load() {
+  //   System.out.println("loading task from file ...");
+  //   List<Task> list = new ArrayList<>();
+    
+  //   try (Stream<String> lines = Files.lines(toFile, StandardCharsets.UTF_8)) {
+  //     list = lines.map(e -> {
+  //       String[] s = e.split(",");
+  //       return new Task(Integer.parseInt(s[0]), new TaskData(s[1], s[2], State.valueOf(s[3]), LocalDate.parse(s[4])));
+  //       }).collect(Collectors.toList());
+  //   } catch (Exception e){
+  //     e.printStackTrace();
+  //   }
+  //   System.out.println("done: Num of Tasks: " + list.size());
+  //   return list;
+  // }
+
+  public List<Task> load2() {
+    System.out.println("loading 2 task from file ...");
     List<Task> list = new ArrayList<>();
     
-    try (Stream<String> lines = Files.lines(toFile, StandardCharsets.UTF_8)) {
-      list = lines.map(e -> {
-        String[] s = e.split(",");
-        return new Task(Integer.parseInt(s[0]), new TaskData(s[1], s[2], State.valueOf(s[3]), LocalDate.parse(s[4])));
-        }).collect(Collectors.toList());
+    try (Stream<String> lines = Files.lines(toEncFile, StandardCharsets.UTF_8)) {
+      list = lines.map(e -> Base64.getDecoder().decode(e))
+                  .map(String::new)
+                  .map(e -> e.split("\n"))
+                  .flatMap(Arrays::stream)
+                  .map(e -> {
+                    String[] s = e.split(",");
+                    return new Task(Integer.parseInt(s[0]), new TaskData(s[1], s[2], State.valueOf(s[3]), LocalDate.parse(s[4])));
+                  })
+                  .collect(Collectors.toList());
+
     } catch (Exception e){
       e.printStackTrace();
     }
-    System.out.println("done: Num of Tasks: " + list.size());
+    System.out.println("done 2: Num of Tasks: " + list.size());
+    System.out.println(list);
     return list;
   }
   

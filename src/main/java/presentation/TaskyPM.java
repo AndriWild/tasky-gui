@@ -81,11 +81,12 @@ public class TaskyPM {
   public void save() {
     Task selectedTask = taskList.get(id.get());
     updateProperties(selectedTask);
-    fr.save(taskList.get());
+    fr.save2(taskList.get());
   }
 
   public void refresh() {
     refresh.set(!refresh.get());
+    fr.save2(taskList.get());
   }
 
   public List<Task> getTaskList() {
@@ -132,7 +133,7 @@ public class TaskyPM {
   }
 
   private void loadTaskFromFile(){
-    List<Task> list = fr.load();
+    List<Task> list = fr.load2();
     taskList.addAll(list);
   }
 
