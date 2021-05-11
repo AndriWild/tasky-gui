@@ -23,42 +23,22 @@ public final class FileRepository {
 
   private static final String DIR = "ressources";
   private static final String FILE = "tasks";
-  private static final String ENC_FILE = "enc_tasks";
 
   private Path toDir;
   private Path toFile;
-  private Path toEncFile;
 
 
   public FileRepository(){
     toDir = Paths.get(DIR);
     toFile = toDir.resolve(FILE);
-    toEncFile = toDir.resolve(ENC_FILE);
   }
 
-  // public void save(List<Task> tasks) {
-
-  //   createDirAndFile();
-  //   System.out.println("save tasks to file ...");
-  //   try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toFile.toFile()))) {
-  //     for (Task task : tasks) {
-  //       os.write((task.getId() + ",").getBytes());
-  //       os.write((task.getTitle() + ",").getBytes());
-  //       os.write((task.getDescription() + ",").getBytes());
-  //       os.write((task.getState().toString() + ",").getBytes());
-  //       os.write((task.getDate().toString() + "\n").getBytes());
-  //     }
-  //   } catch (final Exception e) {
-  //     e.printStackTrace();
-  //   }
-  //   System.out.println("done!");
-  // }
   public void save2(List<Task> tasks) {
 
     createDirAndFile();
     StringBuilder builder = new StringBuilder();
     System.out.println("save tasks to file ...");
-    try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toEncFile.toFile()))) {
+    try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(toFile.toFile()))) {
       
       for (Task task : tasks) {
         builder.append(task.getId() + ",");
@@ -66,8 +46,6 @@ public final class FileRepository {
         builder.append(task.getDescription() + ",");
         builder.append(task.getState().toString() + ",");
         builder.append(task.getDate().toString() + "\n");
-        // byte[] decoded = Base64.getDecoder().decode(encoded);
-        // System.out.println(new String(decoded));
       }
       String encoded = Base64.getEncoder().encodeToString(builder.toString().getBytes());
       os.write(encoded.getBytes());
@@ -78,28 +56,11 @@ public final class FileRepository {
     load2();
   }
 
-  
-  // public List<Task> load() {
-  //   System.out.println("loading task from file ...");
-  //   List<Task> list = new ArrayList<>();
-    
-  //   try (Stream<String> lines = Files.lines(toFile, StandardCharsets.UTF_8)) {
-  //     list = lines.map(e -> {
-  //       String[] s = e.split(",");
-  //       return new Task(Integer.parseInt(s[0]), new TaskData(s[1], s[2], State.valueOf(s[3]), LocalDate.parse(s[4])));
-  //       }).collect(Collectors.toList());
-  //   } catch (Exception e){
-  //     e.printStackTrace();
-  //   }
-  //   System.out.println("done: Num of Tasks: " + list.size());
-  //   return list;
-  // }
-
   public List<Task> load2() {
     System.out.println("loading 2 task from file ...");
     List<Task> list = new ArrayList<>();
     
-    try (Stream<String> lines = Files.lines(toEncFile, StandardCharsets.UTF_8)) {
+    try (Stream<String> lines = Files.lines(toFile, StandardCharsets.UTF_8)) {
       list = lines.map(e -> Base64.getDecoder().decode(e))
                   .map(String::new)
                   .map(e -> e.split("\n"))
@@ -114,7 +75,6 @@ public final class FileRepository {
       e.printStackTrace();
     }
     System.out.println("done 2: Num of Tasks: " + list.size());
-    System.out.println(list);
     return list;
   }
   
